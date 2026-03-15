@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý công việc nhóm</title>
+    <meta
+      name="description"
+      content="Ứng dụng web quản lý công việc nhóm hiện đại, hỗ trợ phân chia nhiệm vụ, theo dõi trạng thái và lưu trữ bền vững."
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <div class="app__header-left">
+          <h1 class="app__title">Bảng công việc nhóm</h1>
+          <p class="app__subtitle">
+            Quản lý nhiệm vụ, phân chia thành viên và theo dõi tiến độ một cách trực quan.
+          </p>
+        </div>
+        <div class="app__header-right">
+          <button class="app__theme-toggle" type="button" aria-label="Đổi chế độ giao diện">
+            <span class="app__theme-toggle-icon"></span>
+          </button>
+        </div>
+      </header>
+
+      <main class="app__main">
+        <section class="panel panel--form" aria-labelledby="form-title">
+          <header class="panel__header">
+            <h2 id="form-title" class="panel__title">Thêm nhiệm vụ mới</h2>
+            <p class="panel__description">
+              Điền đầy đủ thông tin để đảm bảo mọi người đều nắm rõ công việc.
+            </p>
+          </header>
+
+          <form class="task-form" id="task-form" novalidate>
+            <div class="task-form__row">
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-title">Tên nhiệm vụ<span class="task-form__required">*</span></label>
+                <input
+                  class="task-form__input"
+                  type="text"
+                  id="task-title"
+                  name="title"
+                  placeholder="Ví dụ: Chuẩn bị báo cáo tuần"
+                  autocomplete="off"
+                  required
+                />
+                <p class="task-form__error" data-error-for="title"></p>
+              </div>
+            </div>
+
+            <div class="task-form__row task-form__row--two-columns">
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-owner">Người thực hiện<span class="task-form__required">*</span></label>
+                <input
+                  class="task-form__input"
+                  type="text"
+                  id="task-owner"
+                  name="owner"
+                  placeholder="Ví dụ: Minh, Lan, Nhóm Backend..."
+                  autocomplete="off"
+                  required
+                />
+                <p class="task-form__error" data-error-for="owner"></p>
+              </div>
+
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-priority">Độ ưu tiên</label>
+                <select
+                  class="task-form__select"
+                  id="task-priority"
+                  name="priority"
+                >
+                  <option value="normal">Trung bình</option>
+                  <option value="high">Cao</option>
+                  <option value="low">Thấp</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="task-form__row task-form__row--two-columns">
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-status">Trạng thái ban đầu</label>
+                <select
+                  class="task-form__select"
+                  id="task-status"
+                  name="status"
+                >
+                  <option value="todo">Chưa làm</option>
+                  <option value="in-progress">Đang làm</option>
+                  <option value="done">Hoàn thành</option>
+                </select>
+              </div>
+
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-due-date">Hạn hoàn thành</label>
+                <input
+                  class="task-form__input"
+                  type="date"
+                  id="task-due-date"
+                  name="dueDate"
+                />
+              </div>
+            </div>
+
+            <div class="task-form__row">
+              <div class="task-form__field">
+                <label class="task-form__label" for="task-notes">Ghi chú</label>
+                <textarea
+                  class="task-form__textarea"
+                  id="task-notes"
+                  name="notes"
+                  rows="2"
+                  placeholder="Thông tin bổ sung giúp rõ ràng hơn về yêu cầu công việc."
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="task-form__actions">
+              <button class="button button--primary" type="submit">
+                Thêm nhiệm vụ
+              </button>
+              <button class="button button--ghost" type="reset">
+                Xóa dữ liệu
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel panel--board" aria-labelledby="board-title">
+          <header class="panel__header panel__header--with-controls">
+            <div>
+              <h2 id="board-title" class="panel__title">Danh sách công việc</h2>
+              <p class="panel__description">
+                Lọc theo trạng thái, tìm kiếm theo tên nhiệm vụ hoặc thành viên.
+              </p>
+            </div>
+
+            <div class="toolbar" aria-label="Bộ lọc và tìm kiếm công việc">
+              <div class="toolbar__group">
+                <label class="toolbar__label" for="filter-status">Trạng thái</label>
+                <select class="toolbar__select" id="filter-status" name="filterStatus">
+                  <option value="all">Tất cả</option>
+                  <option value="todo">Chưa làm</option>
+                  <option value="in-progress">Đang làm</option>
+                  <option value="done">Hoàn thành</option>
+                </select>
+              </div>
+
+              <div class="toolbar__group toolbar__group--grow">
+                <label class="toolbar__label" for="search-text">Tìm kiếm</label>
+                <div class="toolbar__search-wrapper">
+                  <input
+                    class="toolbar__input"
+                    type="search"
+                    id="search-text"
+                    name="searchText"
+                    placeholder="Nhập tên nhiệm vụ hoặc thành viên..."
+                    autocomplete="off"
+                  />
+                  <span class="toolbar__search-icon" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section class="board" aria-label="Bảng trạng thái công việc">
+            <article class="board-column board-column--todo" aria-label="Cột Chưa làm">
+              <header class="board-column__header">
+                <h3 class="board-column__title">Chưa làm</h3>
+                <span class="board-column__count" data-count-for="todo">0</span>
+              </header>
+              <div
+                class="board-column__list"
+                data-status="todo"
+                id="column-todo"
+              ></div>
+            </article>
+
+            <article class="board-column board-column--in-progress" aria-label="Cột Đang làm">
+              <header class="board-column__header">
+                <h3 class="board-column__title">Đang làm</h3>
+                <span class="board-column__count" data-count-for="in-progress">0</span>
+              </header>
+              <div
+                class="board-column__list"
+                data-status="in-progress"
+                id="column-in-progress"
+              ></div>
+            </article>
+
+            <article class="board-column board-column--done" aria-label="Cột Hoàn thành">
+              <header class="board-column__header">
+                <h3 class="board-column__title">Hoàn thành</h3>
+                <span class="board-column__count" data-count-for="done">0</span>
+              </header>
+              <div
+                class="board-column__list"
+                data-status="done"
+                id="column-done"
+              ></div>
+            </article>
+          </section>
+
+          <footer class="panel__footer">
+            <p class="panel__hint">
+              Gợi ý: Nhấp vào trạng thái trên mỗi thẻ để thay đổi nhanh giữa
+              <strong>Chưa làm</strong>, <strong>Đang làm</strong> và <strong>Hoàn thành</strong>.
+            </p>
+          </footer>
+        </section>
+      </main>
+
+      <footer class="app__footer">
+        <p class="app__footer-text">
+          Ứng dụng demo quản lý công việc nhóm &mdash; lưu trữ cục bộ bằng LocalStorage trên trình duyệt.
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
+
